@@ -93,6 +93,8 @@ urchin_count <- purple_urchins %>%
   select("year", "site_full") %>% 
    count(year, site_full) 
 
+urchin_count
+
 ```
 
 ### Make an Explanantory Graph

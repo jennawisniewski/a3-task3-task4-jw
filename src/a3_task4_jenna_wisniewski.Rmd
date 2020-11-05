@@ -1,0 +1,104 @@
+---
+title: "Task 4"
+author: "Jenna Wisniewski"
+date: "11/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(here)
+library(lubridate)
+```
+
+## Read in the Urchin Data
+```{r}
+urchins <- read_csv(here("data", "urchins.csv")) %>% 
+  clean_names()
+```
+
+## Compare the mean size of purple urchins with no giant kelp removal and with annual giant kelp removal in sections of Naples Reef in Jabuary 2010
+
+### Wrangle the Data
+In this section I will wrangle the urchins data to 
+-only include purple urchins
+-only include observations from Naples Reef
+-only keep observations for January 2010
+
+```{r}
+purple_urchins <- urchins %>% 
+  filter(common_name == "Purple Urchin") %>% 
+  mutate(date = mdy(date)) %>% 
+  mutate(year = year(date)) %>% 
+  mutate(month = month(date)) %>% 
+  mutate(site_full = case_when(
+site == "NAPL" ~ "Naples Reef",
+site == "AQUE" ~ "Arroyo Quemado Reef",
+site == "CARP" ~ "Carpinteria Reef",
+site == "MOHK" ~ "Mohawk Reef",
+site == "IVEE" ~ "Isla Vista Reed"
+))
+
+napl_urchins <- purple_urchins %>% 
+  filter(site_full == "Naples Reef") %>% 
+  filter(year == 2010, month == 1)
+
+```
+
+### Create Exploratory Graphs
+In this section I will create two exploratory graphs in order to look at population distribution stemming from the two different treatments (no giant kelp removal, and annual giant kelp removal)
+
+### Creat a histogram
+```{r}
+ggplot(data = napl_urchins, aes(x = size))+
+  geom_histogram(bins = 15) +
+  facet_wrap(~treatment)+
+   labs(x = "Size of Urchin(cm)", 
+       y = "Number of Urchins of that Size")
+```
+#### Create a QQPlot
+
+
+```{r}
+ggplot(data = napl_urchins, aes(sample = size)) +
+  geom_qq() +
+  facet_wrap(~treatment)
+```
+### Main Takeaways
+My main takeaways from these graphs are
+
+### Create a Basic Statistic Summary Table 
+```{r}
+np_urchin_stats <- napl_urchins %>% 
+  group_by(treatment) %>% 
+  summarize(
+    mean_size = mean(size),
+    median_size = median(size),
+    sd_size = sd(size),
+    n = n())
+
+np_urchin_stats
+```
+
+### Perform a two-sample t-test
+In this section I perform a two-sample t-test to compare means between the two groups of treatments
+#### Data Wrangling
+Split the two treatments into two different vectors
+```{r}
+
+annual_sample <- napl_urchins %>% 
+  filter(treatment == "ANNUAL") %>% 
+  pull(size)
+
+control_sample <- napl_urchins %>% 
+  filter(treatment == "CONTROL") %>% 
+  pull(size)
+```
+### Perfrom a two-sample t-test
+```{r}
+t.test(annual_sample, control_sample)
+```
+
+
