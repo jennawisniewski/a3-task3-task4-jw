@@ -62,7 +62,17 @@ urchin_stats
 ```
 
 ### Overall Takeaways 
-The red urchin has both a larger mean size (~ 2.03cm larger or an increase of 51.61 % from the purple urchin mean ) and a larger median size than the purple urchin. The red urchin also has a larger standard deviation (~0.7 larger) meaning that the sample data was more spread about from the mean in the red urchin sample, while the purple urchin sample was grouped closer to the mean. The red urchin data appears to have a more normal distribution when it is graphed, while the purple urchin has two data spikes instead of the data being centered around one clear median. 
+#### Calculations
+
+```{r}
+#Actual difference in means between red and purple urchins
+6.776489 - 4.469797	
+#Percent difference in means between red and purple urchins
+(6.776489 - 4.469797) / (5.623143)*100	
+```
+
+
+The red urchin has both a larger mean size (~ 2.3cm larger or 41.02% difference) and a larger median size than the purple urchin. The red urchin also has a larger standard deviation (~0.7 larger) meaning that the sample data was more spread about from the mean in the red urchin sample, while the purple urchin sample was grouped closer to the mean. The red urchin data appears to have a more normal distribution when it is graphed, while the purple urchin has two data spikes instead of the data being centered around one clear median. 
 
 ## Section 2- Exploring Purple Urchin Counts by Site and Year
 

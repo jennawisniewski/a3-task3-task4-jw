@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(janitor)
 library(here)
@@ -19,12 +19,16 @@ urchins <- read_csv(here("data", "urchins.csv")) %>%
   clean_names()
 ```
 
-## Compare the mean size of purple urchins with no giant kelp removal and with annual giant kelp removal in sections of Naples Reef in Jabuary 2010
+## Compare the mean size of purple urchins with no giant kelp removal and with annual giant kelp removal in sections of Naples Reef in January 2010
 
 ### Wrangle the Data
+
 In this section I will wrangle the urchins data to 
+
 -only include purple urchins
+
 -only include observations from Naples Reef
+
 -only keep observations for January 2010
 
 ```{r}
@@ -47,10 +51,12 @@ napl_urchins <- purple_urchins %>%
 
 ```
 
-### Create Exploratory Graphs
-In this section I will create two exploratory graphs in order to look at population distribution stemming from the two different treatments (no giant kelp removal, and annual giant kelp removal)
 
-### Creat a histogram
+### Create Exploratory Graphs
+In this section I will create two exploratory graphs in order to look at population distribution stemming from the two different treatments (no giant kelp removal "control", and annual giant kelp removal"annual")
+
+
+#### Create a histogram
 ```{r}
 ggplot(data = napl_urchins, aes(x = size))+
   geom_histogram(bins = 15) +
@@ -58,16 +64,21 @@ ggplot(data = napl_urchins, aes(x = size))+
    labs(x = "Size of Urchin(cm)", 
        y = "Number of Urchins of that Size")
 ```
-#### Create a QQPlot
+
+
+#### Create a QQ Plot
 
 
 ```{r}
 ggplot(data = napl_urchins, aes(sample = size)) +
   geom_qq() +
   facet_wrap(~treatment)
+   
 ```
-### Main Takeaways
-My main takeaways from these graphs are
+
+
+#### Main Takeaways
+When looking at the distribution of the data for the different treatments, both the "annual" and "control" distribution do appear to be fairly normally distributed when looking at the qqplot, however the data is not clearly bell shaped for either when looking at the histogram, but both do show a distribution of a median in the middle of the data, and smaller numbers in the outer bins. Just looking at the graphs, the control data appears to have more urchins at larger size than the annual data.   
 
 ### Create a Basic Statistic Summary Table 
 In this section I will create a basic summary table of each of the populations separated by treatment, including mean, median, standard deviation and population size. 
@@ -97,9 +108,20 @@ control_sample <- napl_urchins %>%
   filter(treatment == "CONTROL") %>% 
   pull(size)
 ```
-### Perfrom a two-sample t-test
+#### Two-sample t-test
 ```{r}
 t.test(annual_sample, control_sample)
 ```
+### Discussion of T-Test
 
+#### Calculations
+```{r}
+#Actual difference in means between annual and control treatment data 
+3.916667-3.725806	
+#Percent difference in means between red and purple urchins
+(3.916667-3.725806) / (3.8212365)*100
+```
 
+When looking at the means of the two samples of treatments, the actual difference between the means is the annually treated sample had a 0.190861 larger mean than the control sample, and the difference between the two means was ~5 percent. The standard deviations for both samples are also very close, showing that they have a similar spread of data across sizes. 
+
+That p value of 0.2536 means there was a very small possibility that you could have randomly drawn samples with means that are at least this different if they were actually taken from populations with the same mean, indicating that there is a good possibility that the annual removal of giant kelp raises the mean urchin size, however the extremely close means indicate that this could be a very small impact. 
