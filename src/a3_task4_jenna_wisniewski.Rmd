@@ -70,6 +70,7 @@ ggplot(data = napl_urchins, aes(sample = size)) +
 My main takeaways from these graphs are
 
 ### Create a Basic Statistic Summary Table 
+In this section I will create a basic summary table of each of the populations separated by treatment, including mean, median, standard deviation and population size. 
 ```{r}
 np_urchin_stats <- napl_urchins %>% 
   group_by(treatment) %>% 

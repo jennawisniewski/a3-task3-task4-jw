@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(janitor)
 library(here)
@@ -18,17 +18,18 @@ library(lubridate)
 urchins <- read_csv(here("data", "urchins.csv")) %>% 
   clean_names()
 ```
-## Sectiom 1- Size Comparison: Purple and Red Urchins
+## Section 1- Size Comparison: Purple and Red Urchins
 
 ### Exploratory Data Visualization
+
 In this section I look at the distribution of sizes between red and purple urchins using two types of graphs. 
 
 #### Create a Faceted Histogram
 ```{r}
 ggplot(data = urchins, aes(x = size))+
-  geom_histogram(bins = 15) +
+  geom_histogram(bins = 20) +
   facet_wrap(~common_name)+
-   labs(x = "Size of Urchin", 
+   labs(x = "Size of Urchin (cm)", 
        y = "Number of Urchins")
 
 
@@ -39,10 +40,12 @@ ggplot(data = urchins, aes(x = size))+
 ggplot(data = urchins, aes(x = common_name, y = size))+
   geom_boxplot() +
    labs(x = "Type of Urchins", 
-       y = "Size Distribution of Urchins")
+       y = "Size of Urchins(cm)")
 ```
 
+
 ### Descriptive Statistics Table
+
 In this section I will create and look at the statistics of for both red urchin and purple urchin populations (mean, median, standard deviation, n)
 ```{r}
 urchin_stats <- urchins %>% 
@@ -57,16 +60,22 @@ urchin_stats <- urchins %>%
 
 urchin_stats 
 ```
+
 ### Overall Takeaways 
-When looking at this data, 
+The red urchin has both a larger mean size (~ 2.03cm larger or an increase of 51.61 % from the purple urchin mean ) and a larger median size than the purple urchin. The red urchin also has a larger standard deviation (~0.7 larger) meaning that the sample data was more spread about from the mean in the red urchin sample, while the purple urchin sample was grouped closer to the mean. The red urchin data appears to have a more normal distribution when it is graphed, while the purple urchin has two data spikes instead of the data being centered around one clear median. 
 
 ## Section 2- Exploring Purple Urchin Counts by Site and Year
 
 ### Data Wrangling
+
 In this section I will create a subset of the data that 
+
 -filters observations for only purple urchins
+
 -Converts the date to class "Date"
+
 -Create a new column that only contains the year
+
 -Create a new column that contains the full name of each of the five sites
 
 ```{r}
@@ -86,7 +95,7 @@ site == "IVEE" ~ "Isla Vista Reed"
 
 ```
 ### Descriptive Statistics Table 
-In this section I will create a table containing the total number of purple urchins observed by site and year
+In this section I will create a table containing the total number of purple urchins observed by site and year.
 
 ```{r}
 urchin_count <- purple_urchins %>% 
@@ -98,7 +107,7 @@ urchin_count
 ```
 
 ### Make an Explanantory Graph
-In this section I will create an exploratory graph of the purple urchins recorded at each site over time for the years included in the study. 
+In this section I will create exploratory graphs of the purple urchins recorded at each site over time for the years included in the study. 
 ```{r}
 ggplot(data = urchin_count, aes(x = year, y = n))+
   geom_col(aes(color = site_full))+
